@@ -93,15 +93,11 @@ router.post("/getexam", async (req, res) => {
                             return;
                         } else {
                             res.json({
-                                message: `Exam Haven't started yet, try again between ${moment(
-                                    foundExam.startDateTime
-                                )
-                                    .utc()
-                                    .format(
-                                        "MMMM Do YYYY, h:mm:ss a"
-                                    )} & ${moment(foundExam.endDateTime)
-                                    .utc()
-                                    .format("MMMM Do YYYY, h:mm:ss a")}`,
+                                message: `Exam Haven't started yet, try again between ${moment(foundExam.startDateTime)
+                                    .tz('Asia/Kolkata')
+                                    .format('MMMM Do YYYY, h:mm:ss a')} & ${moment(foundExam.endDateTime)
+                                    .tz('Asia/Kolkata')
+                                    .format('MMMM Do YYYY, h:mm:ss a')}`,
                             });
                             return;
                         }
