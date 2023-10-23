@@ -174,13 +174,10 @@ router.post("/getresult", async (req, res) => {
 
         // console.log(candidateIndex);
 
-        if (
-            moment().isBetween(
-                examiner.exams[examIndex].startDateTime,
-                examiner.exams[examIndex].endDateTime
-            ) ||
-            devOption
-        ) {
+        // if (
+        //     // moment().isBetween(examiner.exams[examIndex].startDateTime, examiner.exams[examIndex].endDateTime) || 
+        //     devOption
+        // ) {
             // verify if user has taken the exam
             if (
                 !examiner.exams[examIndex].candidates[candidateIndex]
@@ -248,12 +245,12 @@ router.post("/getresult", async (req, res) => {
                 });
                 return;
             }
-        } else {
-            res.json({
-                message: "Your Submittion is out of exam time",
-            });
-            return;
-        }
+        // } else {
+        //     res.json({
+        //         message: "Your Submittion is out of exam time",
+        //     });
+        //     return;
+        // }
 
         examiner.save();
     });
