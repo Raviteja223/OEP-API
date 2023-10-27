@@ -91,4 +91,59 @@ router.post("/signup", async (req, res) => {
     }
 });
 
+router.post("/changePassword", async (req, res) => {
+    // res.send("/login/changePassword");
+
+    try {
+        const foundElement = await Examiner.findOne({
+            username: req.body.username,
+        });
+        if (foundElement === null) {
+            res.json({ message: "no user exist" });
+        } else {
+            bcrypt.compare(
+                req.body.oldPassword,
+                foundElement.password,
+                function (err, result) {
+                    if (err) {
+                        res.json({ message: err });
+                    } else if (result === true) {
+                        console.log("Login Credentials match");
+
+                        const saltRounds = 10;
+
+                        bcrypt.hash(
+                            req.body.newPassword,
+                            saltRounds,
+                            async function (err, hash) {
+                                const container = {
+                                    username: req.body.username,
+                                    password: hash,
+                                };
+
+                                try {
+                                    const updatedExaminer = await Examiner.updateOne(
+                                        { username: req.body.username },
+                                        container
+                                    );
+                                    res.json({
+                                        message:
+                                            "Password change successfull",
+                                    });
+                                } catch (err) {
+                                    res.json({ message: err });
+                                }
+                            }
+                        );
+                    } else {
+                        res.json({ message: "Invalid Credentials" });
+                    }
+                }
+            );
+        }
+    } catch (err) {
+        res.json({ message: "err" });
+    }
+});
+
 module.exports = router;
