@@ -49,6 +49,7 @@ const ExaminerSchema = new Schema({
                 {
                     marks: Number,
                     value: String,
+                    snippetUrl: String,
                     options: [
                         {
                             value: String,

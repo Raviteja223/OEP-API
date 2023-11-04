@@ -1,5 +1,6 @@
 const { response } = require("express");
 const express = require("express");
+const mongoose = require("mongoose");
 
 const moment = require("moment");
 
@@ -254,6 +255,50 @@ router.post("/getresult", async (req, res) => {
 
         examiner.save();
     });
+});
+
+router.post("/getIndividualResultCsv", async (req, res) => {
+    const examiner = mongoose.connection.collection("examiners");
+    const examId = mongoose.Types.ObjectId(req.body.examId);
+    const result = await examiner.findOne({ "exams._id": examId });
+    const finalResult = [];
+    for (let index1 = 0; index1 < result.exams.length; index1++) {
+        if (String(result.exams[index1]._id) === req.body.examId) {
+            const questionsBank = result.questionBanks.find(
+                (questionBank) =>
+                    String(questionBank._id) ===
+                    result.exams[index1].questionBankId
+            );
+            const candidates = result.exams[index1].candidates;
+            for (let index2 = 0; index2 < candidates.length; index2++) {
+                const candidate = candidates[index2];
+                const responses = candidate.responses;
+                const individalResult = {
+                    candidateId: candidate.candidateId,
+                    candidateName: candidate.candidateName,
+                    marks: candidate.Marks,
+                    questions: [],
+                };
+                for (let index3 = 0; index3 < responses.length; index3++) {
+                    const obj = {};
+                    const response = responses[index3];
+                    const question = questionsBank.questions.find(
+                        (question) => String(question._id) === response.questionId
+                    );
+                    const option = question.options.find(
+                        (option) => String(option._id) === response.optionId
+                    );
+                    obj["question"] = question.value;
+                    obj["submittedOption"] = option.value;
+                    obj["correctOption"] = question.correctOptionValue;
+                    obj["answerStatus"] = option.value === question.correctOptionValue ? "correct" : "incorrect";
+                    individalResult.questions.push(obj);
+                }
+                finalResult.push(individalResult);
+            }
+        }
+    }
+    res.json(finalResult);
 });
 
 module.exports = router;
