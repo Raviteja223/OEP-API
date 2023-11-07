@@ -22,8 +22,10 @@ const ExaminerSchema = new Schema({
                     Marks: Number,
                     responses: [
                         {
+                            questionType: String,
                             questionId: String,
                             optionId: String,
+                            code: String,
                         },
                     ],
                 },
