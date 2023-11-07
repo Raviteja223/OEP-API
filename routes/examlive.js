@@ -204,25 +204,29 @@ router.post("/getresult", async (req, res) => {
                 var marksCount = 0;
 
                 foundQuestionBank.questions.forEach((question) => {
-                    const foundResponse = req.body.responses.find(
-                        (response) =>
-                            response.questionId === String(question._id)
-                    );
-
-                    if (foundResponse !== undefined) {
-                        const responseOption = question.options.find(
-                            (option) =>
-                                foundResponse.optionId === String(option._id)
+                    if (question.questionType === "mcq") {
+                        const foundResponse = req.body.responses.find(
+                            (response) =>
+                                response.questionId === String(question._id)
                         );
-
-                        if (
-                            responseOption &&
-                            responseOption.value === question.correctOptionValue
-                        ) {
-                            marksCount += 1;
+    
+                        if (foundResponse !== undefined) {
+                            const responseOption = question.options.find(
+                                (option) =>
+                                    foundResponse.optionId === String(option._id)
+                            );
+    
+                            if (
+                                responseOption &&
+                                responseOption.value === question.correctOptionValue
+                            ) {
+                                marksCount += 1;
+                            }
+                        } else {
+                            //no response found for the quesion
                         }
                     } else {
-                        //no response found for the quesion
+                        // question is not mcq
                     }
                 });
 
