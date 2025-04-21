@@ -12,7 +12,7 @@ try {
         useUnifiedTopology: true,
         useFindAndModify: false,
     });
-    console.log("connected to DB");
+    console.log("connected to DB.");
 } catch (err) {
     console.log(err);
 }
@@ -44,5 +44,5 @@ app.get("/", (req, res) => {
 
 //Port setup
 app.listen(process.env.PORT || 5000, () => {
-    console.log("server is running on port 5000");
+    console.log("server is running on port 5000.");
 });
